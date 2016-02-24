@@ -69,7 +69,7 @@ impl DrawSprites {
     
     pub fn initialize(&mut self, services: &Services) {
         self.program = Some(program!(&services.display,
-            330 => {
+            140 => {
                 vertex: include_str!("sprite_vs.glsl"),
                 fragment: include_str!("sprite_fs.glsl"),
             },

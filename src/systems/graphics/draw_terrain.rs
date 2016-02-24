@@ -73,7 +73,7 @@ impl DrawTerrain {
     
     pub fn initialize(&mut self, services: &Services) {
         self.program = Some(program!(&services.display,
-            330 => {
+            140 => {
                 vertex: include_str!("terrain_vs.glsl"),
                 fragment: include_str!("terrain_fs.glsl"),
             },
@@ -89,6 +89,8 @@ impl DrawTerrain {
     
     pub fn setup_tiles(&mut self, services: &Services) {
         use world::tilemap::{Tile};
+        
+        self.instanced = None;
         
         let width = services.tilemap.width();
         let height = services.tilemap.height();
