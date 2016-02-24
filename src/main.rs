@@ -6,6 +6,7 @@
 extern crate cgmath;
 extern crate rustc_serialize;
 extern crate time;
+extern crate image;
 
 pub mod world;
 pub mod components;
