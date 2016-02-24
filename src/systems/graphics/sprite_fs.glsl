@@ -1,14 +1,14 @@
 #version 140
 
 uniform vec4 tint;
-uniform sampler2D tex;
-uniform float frame;
+uniform sampler2DArray tex;
+uniform uint frame;
 
 in vec2 v_tex_coords;
 
 out vec4 f_color;
 
 void main() {
-    f_color = texture(tex, v_tex_coords) * tint;
+    f_color = texture2DArray(tex, vec3(v_tex_coords, frame)) * tint;
 }
 

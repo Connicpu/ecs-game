@@ -13,9 +13,9 @@ pub struct Sprite {
 }
 
 impl Sprite {
-    pub fn animation_frame(&self) -> f32 {
+    pub fn animation_frame(&self) -> u32 {
         let frames = self.texture.array_size();
-        (self.animation_time / self.animation_length * frames as f64) as f32
+        (self.animation_time / self.animation_length * frames as f64) as u32
     }
     
     pub fn update(&mut self, dt: f64) {
