@@ -22,6 +22,8 @@ pub type BuildData<'a> = ecs::BuildData<'a, GameComponents>;
 fn main() {
     use glium::DisplayBuild;
     use world::tilemap::load_map;
+    use cgmath::Point2;
+    use components::*;
     
     let display = glium::glutin::WindowBuilder::new()
         .with_min_dimensions(800, 480)
@@ -29,12 +31,22 @@ fn main() {
         .with_title("ECS Game".into())
         .build_glium()
         .unwrap();
+        
+    let tileset = Sprite::load_spriteset(
+        &[
+            "assets/tilesets/basic/wall.png",
+            "assets/tilesets/basic/breakable.png",
+        ],
+        &display,
+    ).unwrap();
     
     let services = systems::Services {
         delta_time: 0.0,
         running_time: -1.0,
         running: true,
+        tilemap_changed: true,
         tilemap: load_map("assets/levels/level1.txt"),
+        tileset: tileset,
         display: display,
         frame: None,
         camera: systems::graphics::Camera::new(),
@@ -59,11 +71,10 @@ fn main() {
     
     let display = world.services.display.clone();
     world.create_entity(|e: BuildData, data: &mut GameComponents| {
-        use cgmath::Point2;
-        use components::*;
-        data.position.add(&e, Position { position: Point2::new(0.0, 0.0) });
+        data.position.add(&e, Position { position: Point2::new(3.0, 1.0) });
+        data.camera_follow.add(&e, ());
         data.sprite.add(&e, Sprite::load(
-            ["assets/textures/wat.png"].iter().map(|&s| s),
+            &["assets/textures/wat.png"],
             &display,
             1.0,
         ).unwrap());

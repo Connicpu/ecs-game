@@ -1,4 +1,5 @@
 use std::sync::Arc;
+use std::path::Path;
 use image::{self, ImageResult};
 use cgmath::{Point2, Vector2, Vector3, Matrix4, Quaternion, Rotation3, rad};
 use glium;
@@ -19,17 +20,9 @@ pub struct Sprite {
 impl Sprite {
     pub fn load<'a, I: 'a>(image_paths: I, display: &GlutinFacade, anim_len: f64)
         -> ImageResult<Sprite>
-        where I: Iterator<Item=&'a str> {
-        let mut images = Vec::new();
-        for image_path in image_paths {
-            let image = try!(image::open(image_path)).to_rgba();
-            let dimensions = image.dimensions();
-            let image = glium::texture::RawImage2d::from_raw_rgba(
-                image.into_raw(), dimensions
-            );
-            images.push(image);
-        }
-        let tex = Arc::new(Texture2dArray::new(display, images).unwrap());
+        where I: IntoIterator, I::Item: AsRef<Path> {
+        
+        let tex = try!(Sprite::load_spriteset(image_paths, display));
         
         Ok(Sprite {
             size: Vector2::new(1.0, 1.0),
@@ -41,6 +34,22 @@ impl Sprite {
             
             texture: tex,
         })
+    }
+    
+    pub fn load_spriteset<'a, I: 'a>(image_paths: I, display: &GlutinFacade)
+        -> ImageResult<Arc<Texture2dArray>>
+        where I: IntoIterator, I::Item: AsRef<Path> {
+            
+        let mut images = Vec::new();
+        for image_path in image_paths {
+            let image = try!(image::open(image_path)).to_rgba();
+            let dimensions = image.dimensions();
+            let image = glium::texture::RawImage2d::from_raw_rgba(
+                image.into_raw(), dimensions
+            );
+            images.push(image);
+        }
+        Ok(Arc::new(Texture2dArray::new(display, images).unwrap()))
     }
     
     pub fn animation_frame(&self) -> u32 {
@@ -60,8 +69,9 @@ impl Sprite {
         let size = self.size * self.scale;
         let scale = Matrix4::from_nonuniform_scale(size.x, size.y, 1.0);
         let rotate: Matrix4<f32> = Quaternion::from_angle_z(rad(self.rotation)).into();
-        let translate = Matrix4::from_translation(Vector3::new(position.x, position.y, 0.0));
+        let translate = Matrix4::from_translation(Vector3::new(position.x, -position.y, 0.0));
+        let sprite_mat = translate * rotate * scale;
         
-        cam_matrix * translate * rotate * scale
+        cam_matrix * sprite_mat
     }
 }

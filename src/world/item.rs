@@ -1,6 +1,6 @@
 use self::Item::*;
 
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum Item {
     Empty,
     Coins(u32),

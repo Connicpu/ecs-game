@@ -10,7 +10,7 @@ pub struct Camera {
 impl Camera {
     pub fn new() -> Camera {
         Camera {
-            viewport_size: 2.0,
+            viewport_size: 5.0,
             aspect_ratio: 1.0,
             center: Point2 { x: 0.0, y: 0.0 },
         }
@@ -18,12 +18,12 @@ impl Camera {
     
     pub fn matrix(&self) -> Matrix4<f32> {
         ortho(
-            self.center.x - self.viewport_size * self.aspect_ratio, // Left
-            self.center.x + self.viewport_size * self.aspect_ratio, // Right
-            self.center.y + self.viewport_size, // Top
-            self.center.y - self.viewport_size, // Bottom
-            -1.0, // Near
-            1.0, // Far
+            self.center.x - self.viewport_size * self.aspect_ratio,
+            self.center.x + self.viewport_size * self.aspect_ratio,
+            -self.center.y + self.viewport_size,
+            -self.center.y - self.viewport_size,
+            -1.0,
+            1.0,
         )
     }
 }

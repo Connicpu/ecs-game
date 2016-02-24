@@ -1,7 +1,6 @@
-use std::mem;
-use glium::{Surface, Program, VertexBuffer};
+use glium::{self, Surface, Program, VertexBuffer};
 use glium::index::{NoIndices, PrimitiveType};
-use cgmath::Vector4;
+use cgmath::{Vector4, Matrix};
 use GameData;
 use systems::Services;
 use components::GameComponents;
@@ -21,19 +20,10 @@ pub struct DrawSprites {
     vertices: Option<VertexBuffer<Vertex>>,
 }
 
-impl DrawSprites {
-    pub fn new() -> DrawSprites {
-        DrawSprites {
-            program: None,
-            vertices: None,
-        }
-    }
-}
-
 impl EntityProcess for DrawSprites {
     fn process(&mut self, entities: EntityIter<GameComponents>, data: &mut GameData) {
         if self.program.is_none() {
-            self.initialize(&mut data.services);
+            self.initialize(&data.services);
         }
         
         let frame = data.services.frame.as_mut().unwrap();
@@ -48,10 +38,12 @@ impl EntityProcess for DrawSprites {
                 .map(|t| t.tint).unwrap_or(Vector4::new(1.0, 1.0, 1.0, 1.0));
             let frame_num = sprite.animation_frame();
             let matrix = sprite.matrix(&position.position, &cam_matrix);
-            let wtf_matrix: [[f32; 4]; 4] = unsafe { mem::transmute(matrix) };
+            
             let uniforms = uniform! {
-                matrix: wtf_matrix,
-                tex: sprite.texture.sampled(),
+                matrix: Into::<[[f32; 4]; 4]>::into(matrix.transpose()),
+                tex: sprite.texture.sampled().magnify_filter(
+                    glium::uniforms::MagnifySamplerFilter::Nearest
+                ),
                 frame: frame_num,
                 tint: [tint.x, tint.y, tint.z, tint.w],
             };
@@ -68,7 +60,14 @@ impl EntityProcess for DrawSprites {
 }
 
 impl DrawSprites {
-    pub fn initialize(&mut self, services: &mut Services) {
+    pub fn new() -> DrawSprites {
+        DrawSprites {
+            program: None,
+            vertices: None,
+        }
+    }
+    
+    pub fn initialize(&mut self, services: &Services) {
         self.program = Some(program!(&services.display,
             330 => {
                 vertex: include_str!("sprite_vs.glsl"),

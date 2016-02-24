@@ -14,5 +14,6 @@ components! {
         #[hot] velocity: velocity::Velocity,
         #[hot] tint: tint::Tint,
         #[hot] sprite: sprite::Sprite,
+        #[cold] camera_follow: (),
     }
 }

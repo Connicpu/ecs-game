@@ -12,7 +12,7 @@ pub enum InputTile {
     Item(char),
 }
 
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum Tile {
     Open,
     Wall,
@@ -39,6 +39,10 @@ impl Tilemap {
     
     pub fn filled_at(&self, row: u32, col: u32) -> bool {
         self.collision_map[(row * self.width + col) as usize]
+    }
+    
+    pub fn tiles(&self) -> &[Tile] {
+        &self.tile_map
     }
     
     pub fn tile_at(&self, row: u32, col: u32) -> &Tile {
