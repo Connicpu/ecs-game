@@ -1,0 +1,11 @@
+[package]
+name = "ecs-game"
+version = "0.1.0"
+authors = ["Connor Hilarides <connorcpu@live.com>"]
+
+[dependencies]
+rustc-serialize = "*"
+ecs = "*"
+glium = "*"
+cgmath = "*"
+time = "*"
