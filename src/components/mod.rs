@@ -12,8 +12,8 @@ components! {
     struct GameComponents {
         #[hot] position: position::Position,
         #[hot] velocity: velocity::Velocity,
-        #[hot] tint: tint::Tint,
         #[hot] sprite: sprite::Sprite,
+        #[cold] tint: tint::Tint,
         #[cold] camera_follow: (),
     }
 }
