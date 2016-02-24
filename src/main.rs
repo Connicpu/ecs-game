@@ -8,12 +8,15 @@ extern crate rustc_serialize;
 extern crate time;
 extern crate image;
 
+use components::GameComponents;
+
 pub mod world;
 pub mod components;
 pub mod systems;
 
-pub type GameData = ecs::DataHelper<components::GameComponents, systems::Services>;
+pub type GameData = ecs::DataHelper<GameComponents, systems::Services>;
 pub type GameWorld = ecs::World<systems::GameSystems>;
+pub type BuildData<'a> = ecs::BuildData<'a, GameComponents>;
 
 fn main() {
     use glium::DisplayBuild;
@@ -37,6 +40,22 @@ fn main() {
     };
     
     let mut world = GameWorld::with_services(services);
+    
+    let display = world.services.display.clone();
+    world.create_entity(|e: BuildData, data: &mut GameComponents| {
+        use cgmath::Point2;
+        use components::*;
+        data.position.add(&e, Position { position: Point2::new(0.0, 0.0) });
+        data.sprite.add(&e, Sprite::load(
+            ["assets/textures/wat.png"].iter().map(|&s| s),
+            &display,
+            1.0,
+        ).unwrap());
+    });
+    
+    world.update();
+    
+    println!("{:?}", world.services.camera);
     
     while world.services.running {
         world.update();

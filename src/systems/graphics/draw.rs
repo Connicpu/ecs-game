@@ -9,10 +9,11 @@ pub struct BeginDraw;
 
 impl Process for BeginDraw {
     fn process(&mut self, data: &mut GameData) {
-        let frame = data.services.display.draw();
+        let mut frame = data.services.display.draw();
+        frame.clear(None, Some((0.0, 0.0, 0.0, 1.0)), false, None, None);
         let dimensions = frame.get_dimensions();
         data.services.frame = Some(frame);
-        let aspect = dimensions.1 as f32 / dimensions.0 as f32;
+        let aspect = dimensions.0 as f32 / dimensions.1 as f32;
         data.services.camera.aspect_ratio = aspect;
     }
 }

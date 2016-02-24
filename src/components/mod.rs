@@ -1,3 +1,8 @@
+pub use self::position::Position;
+pub use self::sprite::Sprite;
+pub use self::tint::Tint;
+pub use self::velocity::Velocity;
+
 pub mod position;
 pub mod sprite;
 pub mod tint;

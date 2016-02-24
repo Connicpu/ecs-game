@@ -1,6 +1,4 @@
 use std::sync::Arc;
-use std::fs::File;
-use std::io::{self, Read};
 use image::{self, ImageResult};
 use cgmath::{Point2, Vector2, Vector3, Matrix4, Quaternion, Rotation3, rad};
 use glium;
@@ -26,7 +24,7 @@ impl Sprite {
         for image_path in image_paths {
             let image = try!(image::open(image_path)).to_rgba();
             let dimensions = image.dimensions();
-            let image = glium::texture::RawImage2d::from_raw_rgba_reversed(
+            let image = glium::texture::RawImage2d::from_raw_rgba(
                 image.into_raw(), dimensions
             );
             images.push(image);
