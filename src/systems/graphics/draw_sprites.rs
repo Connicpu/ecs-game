@@ -61,7 +61,7 @@ impl EntityProcess for DrawSprites {
                 NoIndices(PrimitiveType::TriangleStrip),
                 program,
                 &uniforms,
-                &Default::default(),
+                &data.services.draw_params,
             ).unwrap();
         }
     }

@@ -1,7 +1,7 @@
 use ecs;
 use ecs::system::entity::EntitySystem;
 use glium::backend::glutin_backend::GlutinFacade;
-use glium::Frame;
+use glium::{Frame, DrawParameters};
 use world::tilemap::Tilemap;
 use components::GameComponents;
 
@@ -38,6 +38,7 @@ pub struct Services {
     pub display: GlutinFacade,
     pub frame: Option<Frame>,
     pub camera: graphics::Camera,
+    pub draw_params: DrawParameters<'static>,
 }
 
 impl ecs::ServiceManager for Services {}

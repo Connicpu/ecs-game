@@ -9,6 +9,7 @@ extern crate time;
 extern crate image;
 
 use components::GameComponents;
+use glium::DrawParameters;
 
 pub mod world;
 pub mod components;
@@ -37,6 +38,21 @@ fn main() {
         display: display,
         frame: None,
         camera: systems::graphics::Camera::new(),
+        draw_params: DrawParameters {
+            blend: glium::Blend {
+                color: glium::BlendingFunction::Addition {
+                    source: glium::LinearBlendingFactor::SourceAlpha,
+                    destination: glium::LinearBlendingFactor::OneMinusSourceAlpha
+                },
+                alpha: glium::BlendingFunction::Addition {
+                    source: glium::LinearBlendingFactor::SourceAlpha,
+                    destination: glium::LinearBlendingFactor::OneMinusSourceAlpha
+                },
+                constant_value: (1.0, 1.0, 1.0, 1.0)
+            },
+            
+            ..Default::default()
+        }
     };
     
     let mut world = GameWorld::with_services(services);

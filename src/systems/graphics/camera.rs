@@ -10,7 +10,7 @@ pub struct Camera {
 impl Camera {
     pub fn new() -> Camera {
         Camera {
-            viewport_size: 5.0,
+            viewport_size: 2.0,
             aspect_ratio: 1.0,
             center: Point2 { x: 0.0, y: 0.0 },
         }
